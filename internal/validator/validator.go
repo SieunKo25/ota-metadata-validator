@@ -1,10 +1,10 @@
-package main
+package validator
 
 import (
 	"fmt"
 )
 
-func validateUpdate(metaPath, filePath string) error {
+func ValidateUpdate(metaPath, filePath string) error {
 	m, err := readMetadata(metaPath)
 	if err != nil {
 		return fmt.Errorf("read metadata:%w", err)

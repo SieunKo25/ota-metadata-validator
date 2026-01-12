@@ -1,11 +1,9 @@
-package main
+package validator
 
 import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"flag"
-	"fmt"
 	"os"
 )
 
@@ -34,31 +32,4 @@ func readMetadata(path string) (*Metadata, error) {
 		return nil, err
 	}
 	return &m, nil
-}
-
-func main() {
-	metaPath := flag.String("meta", "testdata/metadata.json", "Path to update metadata JSON")
-	flag.Parse()
-
-	files := []string{
-		"testdata/firmware.bin",
-		"testdata/firmware_bad.bin",
-	}
-
-	results := make(chan string)
-
-	for _, f := range files {
-		go func(file string) {
-			err := validateUpdate(*metaPath, file)
-			if err != nil {
-				results <- fmt.Sprintf("FAIL [%s]: %v", file, err)
-				return
-			}
-			results <- fmt.Sprintf("PASS [%s]", file)
-		}(f)
-	}
-
-	for i := 0; i < len(files); i++ {
-		fmt.Println(<-results)
-	}
 }
